@@ -1,6 +1,6 @@
 #Updated on: Jan. 13, 2022
 #Version: 1.00
-#This script works in both vCenter 6.5 and below and 6.7
+#This script works in both vCenter 6.5 and below and 6.7 (not tested in vCenter 7 yet)
 #This script will enable hotadd cpu and mem on all powered on and powered off vm's in the servers.txt input file
 #The servers.txt file should contain a list of all of the vm's in vCenter that you want to enable hotadd on and be in the same directory the script is being run from
 #This will enabled hotadd on both powered on and powered off vm's.
