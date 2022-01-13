@@ -1,5 +1,8 @@
+#Updated on: Jan. 13, 2022
+#Version: 1.00
 #This script assumes you already have VMware PowerCLI installed using the command "install-module -name VMware.PowerCLI -scope CurrentUser"
-write-host "start of script" -ForegroundColor White	
+write-host "***Start of script***" -ForegroundColor White	
+write-host " "
 write-host "checking if VMware PowerCLI is installed..."
 $check = find-module -name vmware.powercli
 if($check = $null){
@@ -7,9 +10,20 @@ if($check = $null){
     write-host "please install by running the command: install-module -name vmware.powercli -scope currentuser"
     exit
 }
+write-host "VMware PowerCLI installed...continuing" -ForegroundColor Green
+
+#Checking for servers.txt file which should be in same directory the script is being run from or it will fail
+if (-not(test-path -path ./servers.txt -pathtype leaf)){
+    write-host "Input file not found: servers.txt" -ForegroundColor Red
+    write-host "Please ensure the servers.txt is in the same directory as the script and re-run" -ForegroundColor Red
+    write-host "script is exiting now..." -ForegroundColor Red
+    exit
+}
+
+write-host "Input file found...continuing" -ForegroundColor Green
 
 #Disable invalid vCenter SSL cert warnings
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
+$setcert = Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
 
 #Prompt for vCenter name
 $vcenter = Read-Host "Enter vCenter name"
@@ -19,7 +33,7 @@ connect-viserver -server $vcenter
 
 #Function to enable Hot Add Memory
 Function Enable-MemHotAdd($vm){
-    $vmview = Get-VM $vm | Get-View 
+    $vmview = Get-VM $vm | Get-View
     $vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec
 
     $extra = New-Object VMware.Vim.optionvalue
@@ -53,8 +67,6 @@ Function memcpu($vm){
  
 ######Start of main script
 #Get list of servers to enable hot add on from file name below
-#File should be in same directory the script is being run from or it will fail
-
 Get-Content "./servers.txt" | %{ 
      $vm = Get-VM -Name $_ 
 
