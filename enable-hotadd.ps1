@@ -1,9 +1,21 @@
 #This script assumes you already have VMware PowerCLI installed using the command "install-module -name VMware.PowerCLI -scope CurrentUser"
+write-host "start of script" -ForegroundColor White	
+write-host "checking if VMware PowerCLI is installed..."
+$check = find-module -name vmware.powercli
+if($check = $null){
+    write-host "VMware PowerCLI cmdlet not installed, exiting..."
+    write-host "please install by running the command: install-module -name vmware.powercli -scope currentuser"
+    exit
+}
+
 #Disable invalid vCenter SSL cert warnings
 Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
 
+#Prompt for vCenter name
+$vcenter = Read-Host "Enter vCenter name"
+
 #Connect to vCenter - it will prompt for username and password
-connect-viserver -server vcenter.sedemo.vmturbo.com
+connect-viserver -server $vcenter
 
 #Function to enable Hot Add Memory
 Function Enable-MemHotAdd($vm){
@@ -42,14 +54,6 @@ Function memcpu($vm){
 ######Start of main script
 #Get list of servers to enable hot add on from file name below
 #File should be in same directory the script is being run from or it will fail
-write-host "start of script" -ForegroundColor White	
-write-host "checking if VMware PowerCLI is installed..."
-$check = find-module -name vmware.powercli
-if($check = $null){
-    write-host "VMware PowerCLI cmdlet not installed, exiting..."
-    write-host "please install by running the command: install-module -name vmware.powercli -scope currentuser"
-    exit
-}
 
 Get-Content "./servers.txt" | %{ 
      $vm = Get-VM -Name $_ 
