@@ -1,5 +1,6 @@
 #Updated on: Jan. 13, 2022
 #Version: 1.00
+#This script works in both vCenter 6.5 and below and 6.7
 #This script will enable hotadd cpu and mem on all powered on and powered off vm's in the servers.txt input file
 #The servers.txt file should contain a list of all of the vm's in vCenter that you want to enable hotadd on and be in the same directory the script is being run from
 #This will enabled hotadd on both powered on and powered off vm's.
@@ -37,7 +38,7 @@ $vcenter = Read-Host "Enter vCenter name"
 #Connect to vCenter - it will prompt for username and password
 connect-viserver -server $vcenter -ErrorAction Stop
 
-#Function to enable Hot Add Memory
+#Function to enable Hot Add Memory in vCenter 6.7
 Function Enable-MemHotAdd($vm){
     $vmview = Get-VM $vm | Get-View
     $vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec
@@ -50,7 +51,7 @@ Function Enable-MemHotAdd($vm){
     $vmview.ReconfigVM($vmConfigSpec)
 }
 
-#Function to enable Hot Add CPU
+#Function to enable Hot Add CPU in vCenter 6.7
 Function Enable-CpuHotAdd($vm){
     $vmview = Get-VM $vm | Get-View 
     $vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec
@@ -63,7 +64,7 @@ Function Enable-CpuHotAdd($vm){
     $vmview.ReconfigVM($vmConfigSpec)
 }
 
-#Function to enable Hot Add CPU and Memory (but this doesn't work in vCenter 6.7, will only work in vCenter 6.5 and below)
+#Function to enable Hot Add CPU and Memory in vCenter 6.5 and below
 Function memcpu($vm){ 
     $spec = New-Object VMware.Vim.VirtualMachineConfigSpec
     $spec.CpuHotAddEnabled = $true
