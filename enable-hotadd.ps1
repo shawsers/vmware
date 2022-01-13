@@ -1,6 +1,11 @@
 #Updated on: Jan. 13, 2022
 #Version: 1.00
-#This script assumes you already have VMware PowerCLI installed using the command "install-module -name VMware.PowerCLI -scope CurrentUser"
+#This script will enable hotadd cpu and mem on all powered on and powered off vm's in the servers.txt input file
+#The servers.txt file should contain a list of all of the vm's in vCenter that you want to enable hotadd on and be in the same directory the script is being run from
+#This will enabled hotadd on both powered on and powered off vm's.
+#Note for the powered on vms this won't take affect until the vm's are powered off and powered on (not a reboot)
+#This script requires that VMware PowerCLI is installed or it will not run"
+
 write-host "***Start of script***" -ForegroundColor White	
 write-host " "
 write-host "checking if VMware PowerCLI is installed..."
