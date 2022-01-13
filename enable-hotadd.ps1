@@ -18,6 +18,7 @@ if($check = $null){
 write-host "VMware PowerCLI installed...continuing" -ForegroundColor Green
 
 #Checking for servers.txt file which should be in same directory the script is being run from or it will fail
+write-host "checking for servers.txt input file..."
 if (-not(test-path -path ./servers.txt -pathtype leaf)){
     write-host "Input file not found: servers.txt" -ForegroundColor Red
     write-host "Please ensure the servers.txt is in the same directory as the script and re-run" -ForegroundColor Red
@@ -26,7 +27,7 @@ if (-not(test-path -path ./servers.txt -pathtype leaf)){
 }
 
 write-host "Input file found...continuing" -ForegroundColor Green
-
+write-host " "
 #Disable invalid vCenter SSL cert warnings
 $setcert = Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
 
@@ -34,7 +35,7 @@ $setcert = Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$
 $vcenter = Read-Host "Enter vCenter name"
 
 #Connect to vCenter - it will prompt for username and password
-connect-viserver -server $vcenter
+connect-viserver -server $vcenter -ErrorAction Stop
 
 #Function to enable Hot Add Memory
 Function Enable-MemHotAdd($vm){
